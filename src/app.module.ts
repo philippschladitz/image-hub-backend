@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Test } from './test.entity';
 import { TestService } from './test.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { TestService } from './test.service';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([Test])
+    TypeOrmModule.forFeature([Test]),
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService, TestService],
