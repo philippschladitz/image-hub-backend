@@ -18,7 +18,6 @@ export class AppController {
     testEntity.name = 'Test';
     await this.testService.save(testEntity);
     const check = await this.testService.findAll();
-    console.log('check', check);
   }
 
   @Get()
