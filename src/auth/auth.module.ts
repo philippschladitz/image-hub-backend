@@ -14,7 +14,10 @@ import { AuthController } from './auth.controller';
         PassportModule.register({ defaultStrategy: 'jwt' }),
         TypeOrmModule.forFeature([User]),
         JwtModule.register({ 
-            secretOrPrivateKey: 'yourSecret'
+            secretOrPrivateKey: 'yourSecret',
+            signOptions: {
+                expiresIn: 3600
+            }
         }) // pass your own secret inside
     ],
     providers: [
