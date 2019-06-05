@@ -1,40 +1,41 @@
-import { Injectable } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
+import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
-import { UserService } from "./user.service";
-import { User } from "./user.entity";
-import { JwtPayload } from "./jwt-payload";
+import { UserService } from './user.service';
+import { User } from './user.entity';
+import { JwtPayload } from './jwt-payload';
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly userService: UserService,
-        private readonly jwtService: JwtService
-    ) {}
+        private readonly jwtService: JwtService,
+    ) { }
 
-    private validate(user: User) {
-        return this.userService.findByEmail(user.email);
+    private async validate(user: User) {
+        const userInDb = await this.userService.findByEmail(user.email);
+        return userInDb.validatePassword(user.password) ? userInDb : null;
     }
 
     login(user: User) {
-        return this.validate(user).then((user) => { 
-            if(!user) {
-                return { status: 404 }
+        return this.validate(user).then(validatedUser => {
+            if (!validatedUser) {
+                return { status: 401 };
             }
 
             const payload = {
-                id: user.id,
-                name: user.name
+                id: validatedUser.id,
+                email: validatedUser.email,
             };
             const accessToken = this.jwtService.sign(payload);
 
-            return { 
+            return {
                 expires_in: 3600,
                 access_token: accessToken,
                 user_id: payload,
-                status: 200
+                status: 200,
             };
-        })
+        });
     }
 
     register(user: User) {
@@ -42,7 +43,7 @@ export class AuthService {
     }
 
     validateUser(jwtPayload: JwtPayload) {
-        if (jwtPayload.id && jwtPayload.name) {
+        if (jwtPayload.id && jwtPayload.email) {
             return Boolean(this.userService.findById(jwtPayload.id));
         }
         return false;
