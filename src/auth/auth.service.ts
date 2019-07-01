@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { UserService } from './user.service';
@@ -38,7 +38,12 @@ export class AuthService {
         });
     }
 
-    register(user: User) {
+    async register(user: User) {
+        const existingUser = await this.userService.findByEmail(user.email);
+        if (existingUser) {
+            throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+        }
+        
         return this.userService.create(user);
     }
 
