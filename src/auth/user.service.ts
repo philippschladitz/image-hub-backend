@@ -9,19 +9,19 @@ export class UserService {
         @InjectRepository(User) private userRepository: Repository<User>) {
     }
 
-    findById (id: string) {
+    findById(id: string) {
         return this.userRepository.findOne({
             where: {
-                id: id
-            }
+                id,
+            },
         });
     }
 
-    findByEmail (email: string) {
+    findByEmail(email: string) {
         return this.userRepository.findOne({
             where: {
-                email: email
-            }
+                email,
+            },
         });
     }
 

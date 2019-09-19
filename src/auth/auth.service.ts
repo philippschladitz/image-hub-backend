@@ -12,11 +12,6 @@ export class AuthService {
         private readonly jwtService: JwtService,
     ) { }
 
-    private async validate(user: User) {
-        const userInDb = await this.userService.findByEmail(user.email);
-        return userInDb.validatePassword(user.password) ? userInDb : null;
-    }
-
     login(user: User) {
         return this.validate(user).then(validatedUser => {
             if (!validatedUser) {
@@ -43,14 +38,26 @@ export class AuthService {
         if (existingUser) {
             throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
         }
-        
-        return this.userService.create(user);
+
+        const createdUser = await this.userService.create(user);
+        return {
+            email: createdUser.email,
+        };
     }
 
-    validateUser(jwtPayload: JwtPayload) {
+    async validateUser(jwtPayload: JwtPayload) {
         if (jwtPayload.id && jwtPayload.email) {
-            return Boolean(this.userService.findById(jwtPayload.id));
+            const findByEmail = await this.userService.findByEmail(jwtPayload.email);
+            return findByEmail !== null && findByEmail !== undefined;
         }
         return false;
+    }
+
+    private async validate(user: User) {
+        const userInDb = await this.userService.findByEmail(user.email);
+        if (userInDb === null || userInDb === undefined) {
+            return null;
+        }
+        return userInDb.validatePassword(user.password) ? userInDb : null;
     }
 }
