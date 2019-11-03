@@ -47,8 +47,10 @@ export class AuthService {
 
     async validateUser(jwtPayload: JwtPayload) {
         if (jwtPayload.id && jwtPayload.email) {
-            const findByEmail = await this.userService.findByEmail(jwtPayload.email);
-            return findByEmail !== null && findByEmail !== undefined;
+            const findByEmailUser = await this.userService.findByEmail(jwtPayload.email);
+            if (findByEmailUser !== null && findByEmailUser !== undefined) {
+                return findByEmailUser;
+            }
         }
         return false;
     }
