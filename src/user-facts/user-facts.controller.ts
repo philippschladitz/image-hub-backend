@@ -32,6 +32,11 @@ export class UserFactsController {
     return this.userFactsService.getTopics(user.id);
   }
 
+  @Get('available-topics')
+  getAvailableTopics() {
+    return this.userFactsService.getAvailableTopics();
+  }
+
   @Post('gender')
   @UseGuards(AuthGuard())
   postGender(@Request() req) {

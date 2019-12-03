@@ -36,6 +36,40 @@ export class UserFactsService {
         };
     }
 
+    async getAvailableTopics() {
+        return [
+            'diy',
+            'food',
+            'hairstyle',
+            'fingerfood',
+            'desserts',
+            'interior',
+            'make-up',
+            'upcycling',
+            'gardening',
+            'cocktails',
+            'breakfast',
+            'celebrations',
+            'presents',
+            'nail-design',
+            'barbecue',
+            'fitness',
+            'decoration',
+            'travel',
+            'animals',
+            'education',
+            'tips',
+            'living-room',
+            'kitchen',
+            'yoga',
+            'quotes',
+            'cats',
+        ].map(name => ({
+            id: name,
+            imageUrl: `assets/topics/${name}.jpg`,
+        }));
+    }
+
     async getTopics(userId: string) {
         const result = await this.getUserFacts(userId);
 

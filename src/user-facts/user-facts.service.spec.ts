@@ -176,7 +176,7 @@ describe('UserFactsService', () => {
             }));
             const result = await userFactsService.getTopics(userId);
             expect(result).toEqual({
-                topics: ['a', 'b', 'c']
+                topics: ['a', 'b', 'c'],
             });
             done();
         });
