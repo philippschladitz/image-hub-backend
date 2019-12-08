@@ -82,6 +82,20 @@ export class UserFactsService {
         };
     }
 
+    async isFinished(userId: string) {
+        const result = await this.getUserFacts(userId);
+
+        if (!result) {
+            return false;
+        }
+
+        return result.country !== null && result.country !== undefined &&
+            result.language !== null && result.language !== undefined &&
+            result.gender !== null && result.gender !== undefined &&
+            result.topics !== null && result.topics !== undefined &&
+            result.topics.length >= 5;
+    }
+
     async saveGender(userId: string, gender: 'male' | 'female' | 'userDefined', userDefinedGender?: string) {
         const existingUserFacts = await this.getUserFacts(userId);
         const userFacts = existingUserFacts ? existingUserFacts : new UserFacts();

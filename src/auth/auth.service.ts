@@ -25,7 +25,8 @@ export class AuthService {
             const accessToken = this.jwtService.sign(payload);
 
             return {
-                expires_in: 3600,
+                issued_at: new Date().getTime(),
+                expires_in: 1 * 24 * 60 * 1000,
                 access_token: accessToken,
                 user_id: payload,
                 status: 200,

@@ -8,6 +8,14 @@ export class UserFactsController {
       private readonly userFactsService: UserFactsService,
   ) { }
 
+  @Get('finished')
+  @UseGuards(AuthGuard())
+  finished(@Request() req) {
+    const user = req.user;
+    this.validateUser(user);
+    return this.userFactsService.isFinished(user.id);
+  }
+
   @Get('gender')
   @UseGuards(AuthGuard())
   getGender(@Request() req) {
