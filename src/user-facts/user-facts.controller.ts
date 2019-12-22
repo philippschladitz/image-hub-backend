@@ -1,6 +1,7 @@
 import { Controller, Get, UseGuards, Post, Request, BadRequestException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UserFactsService } from './user-facts.service';
+import { User } from '../auth/user.entity';
 
 @Controller('user-facts')
 export class UserFactsController {
@@ -43,6 +44,14 @@ export class UserFactsController {
   @Get('available-topics')
   getAvailableTopics() {
     return this.userFactsService.getAvailableTopics();
+  }
+
+  @Get('name')
+  @UseGuards(AuthGuard())
+  getName(@Request() req) {
+    const user: User = req.user;
+    this.validateUser(user);
+    return user.name;
   }
 
   @Post('gender')

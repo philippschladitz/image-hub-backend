@@ -22,6 +22,13 @@ export class AuthController {
         const userEntity = new User();
         userEntity.email = userDto.email;
         userEntity.password = userDto.password;
+        userEntity.age = userDto.age;
+
+        const namePart = userDto.email.split('@')[0];
+        const splitByDot = namePart.split('.');
+        userEntity.name = splitByDot
+            .map(name => name.charAt(0).toUpperCase() + name.substring(1))
+            .reduce((previous, current, index) => index !== 0 ? `${previous} ${current}` : current, '');
 
         return this.authService.register(userEntity);
     }

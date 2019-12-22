@@ -12,6 +12,12 @@ export class User {
     @Column()
     password: string;
 
+    @Column()
+    name: string;
+
+    @Column()
+    age: number;
+
     // run sha algorithm for security reasons before inserting into the db
     @BeforeInsert()
     hashPassword() {
