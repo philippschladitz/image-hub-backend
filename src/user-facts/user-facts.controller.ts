@@ -46,6 +46,14 @@ export class UserFactsController {
     return this.userFactsService.getAvailableTopics();
   }
 
+  @Get('email')
+  @UseGuards(AuthGuard())
+  getEmail(@Request() req) {
+    const user: User = req.user;
+    this.validateUser(user);
+    return user.email;
+  }
+
   @Get('name')
   @UseGuards(AuthGuard())
   getName(@Request() req) {
