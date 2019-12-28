@@ -2,11 +2,13 @@ import { Controller, Get, UseGuards, Post, Request, BadRequestException } from '
 import { AuthGuard } from '@nestjs/passport';
 import { UserFactsService } from './user-facts.service';
 import { User } from '../auth/user.entity';
+import { UserService } from '../auth/user.service';
 
 @Controller('user-facts')
 export class UserFactsController {
   constructor(
       private readonly userFactsService: UserFactsService,
+      private readonly userService: UserService,
   ) { }
 
   @Get('finished')
@@ -60,6 +62,15 @@ export class UserFactsController {
     const user: User = req.user;
     this.validateUser(user);
     return user.name;
+  }
+
+
+  @Post('name')
+  @UseGuards(AuthGuard())
+  postName(@Request() req) {
+    const user = req.user;
+    this.validateUser(user);
+    return this.userService.updateName(user.id, user.email, req.body.name);
   }
 
   @Post('gender')

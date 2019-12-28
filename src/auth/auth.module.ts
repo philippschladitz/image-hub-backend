@@ -32,6 +32,7 @@ import { AuthController } from './auth.controller';
     exports: [
         PassportModule,
         AuthService,
+        UserService,
     ],
 })
 export class AuthModule { }

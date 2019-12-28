@@ -28,4 +28,11 @@ export class UserService {
     create(user: User) {
         return this.userRepository.save(user);
     }
+
+    async updateName(id: string, email: string, name: string) {
+        const result = await this.userRepository.update({
+            id,
+        }, { name });
+        return name;
+    }
 }
