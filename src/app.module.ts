@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UserFactsModule } from './user-facts';
+import { PinsModule } from './pins';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { UserFactsModule } from './user-facts';
     }),
     AuthModule,
     UserFactsModule,
+    PinsModule,
   ],
   controllers: [AppController],
 })
-export class AppModule { }
+export class AppModule {}
