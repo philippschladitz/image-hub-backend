@@ -1,43 +1,31 @@
 import { INestApplication } from '@nestjs/common';
 import { PinsService } from '../pins';
+import { Topics } from '../shared';
 
 export async function seed(app: INestApplication) {
   const pinsService = app.get(PinsService);
 
-  const pins = [
-    'diy',
-    'food',
-    'hairstyle',
-    'fingerfood',
-    'desserts',
-    'interior',
-    'make-up',
-    'upcycling',
-    'gardening',
-    'cocktails',
-    'breakfast',
-    'celebrations',
-    'presents',
-    'nail-design',
-    'barbecue',
-    'fitness',
-    'decoration',
-    'travel',
-    'animals',
-    'education',
-    'tips',
-    'living-room',
-    'kitchen',
-    'yoga',
-    'quotes',
-    'cats',
-  ].map(topicName => ({
+  const basicPins = Object.keys(Topics).map(topicName => ({
     title: `${topicName} Title`,
-    topic: topicName,
+    topic: topicName as Topics,
     description: 'lorem ipsum',
     link: `https://www.google.com/search?q=${topicName}`,
-    image: `assets/topics/${name}.jpg`,
+    image: `assets/topics/${topicName.toLowerCase().replace('_', '-')}.jpg`,
   }));
+
+  const pins = basicPins
+    .concat(
+      basicPins.map(p => ({
+        ...p,
+        title: `${p.title} 1`,
+      })),
+    )
+    .concat(
+      basicPins.map(p => ({
+        ...p,
+        title: `${p.title} 2`,
+      })),
+    );
 
   for (const pin of pins) {
     await pinsService.create(pin);

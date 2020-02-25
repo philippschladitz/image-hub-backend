@@ -8,8 +8,11 @@ async function bootstrap() {
   const toSeed = process.argv[2];
   if (toSeed) {
     await seed(app);
+
+    process.exit();
   }
 
   await app.listen(3000);
 }
+
 bootstrap();

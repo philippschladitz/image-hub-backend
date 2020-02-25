@@ -1,4 +1,5 @@
 import { Entity, Column, ObjectIdColumn, ObjectID } from 'typeorm';
+import { Topics } from '../shared';
 
 @Entity()
 export class Pin {
@@ -9,7 +10,7 @@ export class Pin {
   title: string;
 
   @Column()
-  topic: string;
+  topic: Topics;
 
   @Column()
   description: string;

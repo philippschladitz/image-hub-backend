@@ -18,11 +18,13 @@ export class PinsController {
     private readonly userService: UserService,
   ) {}
 
-  @Get('')
-  @UseGuards(AuthGuard())
-  finished(@Request() req) {
-    const user = req.user;
-    this.validateUser(user);
+  @Get()
+  // @UseGuards(AuthGuard())
+  getPins(@Request() req) {
+    // const user = req.user;
+    // this.validateUser(user);
+
+    return this.pinsService.get();
   }
 
   private validateUser(user) {
