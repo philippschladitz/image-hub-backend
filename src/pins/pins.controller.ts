@@ -19,12 +19,11 @@ export class PinsController {
   ) {}
 
   @Get()
-  // @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard())
   getPins(@Request() req) {
-    // const user = req.user;
-    // this.validateUser(user);
-
-    return this.pinsService.get();
+    const user = req.user;
+    this.validateUser(user);
+    return this.pinsService.getDashboardPins(user.id);
   }
 
   private validateUser(user) {
