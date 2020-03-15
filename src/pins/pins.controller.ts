@@ -26,6 +26,17 @@ export class PinsController {
     return this.pinsService.getDashboardPins(user.id);
   }
 
+  @Post('blacklist')
+  @UseGuards(AuthGuard())
+  blacklist(@Request() req) {
+    const user = req.user;
+    this.validateUser(user);
+
+    const { pinId } = req.body;
+
+    return this.pinsService.blackList(pinId, user.id);
+  }
+
   private validateUser(user) {
     if (user === undefined || user === null || !user.id) {
       throw new BadRequestException('User or user id is undefined');

@@ -26,4 +26,7 @@ export class Pin {
     comment: string;
     userId: ObjectID;
   }>;
+
+  @Column()
+  userBlackList: ObjectID[];
 }

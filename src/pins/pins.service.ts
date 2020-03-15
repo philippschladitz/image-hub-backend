@@ -49,7 +49,32 @@ export class PinsService {
         topic: {
           $in: userTopics.topics,
         },
+        userBlackList: {
+          $not: {
+            $elemMatch: {
+              $eq: userId,
+            },
+          },
+        },
       },
     });
+  }
+
+  async blackList(pinId: string, userId: string) {
+    const pin = await this.pinRepository.findOne(pinId);
+
+    console.log('pin', pin);
+
+    if (pin === undefined || pin === null) {
+      throw new NotFoundException('Pin not found');
+    }
+
+    if (pin.userBlackList && pin.userBlackList.length > 0) {
+      pin.userBlackList.push(new ObjectID(userId));
+    } else {
+      pin.userBlackList = [new ObjectID(userId)];
+    }
+
+    return this.pinRepository.save(pin);
   }
 }
