@@ -63,8 +63,6 @@ export class PinsService {
   async blackList(pinId: string, userId: string) {
     const pin = await this.pinRepository.findOne(pinId);
 
-    console.log('pin', pin);
-
     if (pin === undefined || pin === null) {
       throw new NotFoundException('Pin not found');
     }
@@ -74,6 +72,24 @@ export class PinsService {
     } else {
       pin.userBlackList = [new ObjectID(userId)];
     }
+
+    return this.pinRepository.save(pin);
+  }
+
+  async removeUserFromBlacklist(pinId: string, userId: string) {
+    const pin = await this.pinRepository.findOne(pinId);
+
+    if (pin === undefined || pin === null) {
+      throw new NotFoundException('Pin not found');
+    }
+
+    if (!pin.userBlackList || pin.userBlackList.length <= 0) {
+      throw new BadRequestException('User didnt blacklist the pin');
+    }
+
+    pin.userBlackList = pin.userBlackList.filter(
+      id => !id.equals(new ObjectID(userId)),
+    );
 
     return this.pinRepository.save(pin);
   }

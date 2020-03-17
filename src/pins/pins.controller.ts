@@ -5,6 +5,8 @@ import {
   Post,
   Request,
   BadRequestException,
+  Delete,
+  Param,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '../auth/user.entity';
@@ -35,6 +37,17 @@ export class PinsController {
     const { pinId } = req.body;
 
     return this.pinsService.blackList(pinId, user.id);
+  }
+
+  @Delete('blacklist/:pinId')
+  @UseGuards(AuthGuard())
+  removeUserFromBlacklist(@Request() req, @Param() param) {
+    const user = req.user;
+    this.validateUser(user);
+
+    const pinId = param.pinId;
+
+    return this.pinsService.removeUserFromBlacklist(pinId, user.id);
   }
 
   private validateUser(user) {
