@@ -28,6 +28,16 @@ export class PinsController {
     return this.pinsService.getDashboardPins(user.id);
   }
 
+  @Get(':pinId')
+  @UseGuards(AuthGuard())
+  getPin(@Request() req, @Param() param) {
+    const user = req.user;
+    this.validateUser(user);
+    const pinId = param.pinId;
+
+    return this.pinsService.getPin(pinId);
+  }
+
   @Post('blacklist')
   @UseGuards(AuthGuard())
   blacklist(@Request() req) {

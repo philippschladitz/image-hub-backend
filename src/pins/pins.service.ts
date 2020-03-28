@@ -60,6 +60,19 @@ export class PinsService {
     });
   }
 
+  async getPin(pinId: string) {
+    if (pinId === undefined || pinId === null) {
+      throw new BadRequestException('Pin id not defined');
+    }
+    const pin = await this.pinRepository.findOne(pinId);
+
+    if (pin === undefined || pin === null) {
+      throw new NotFoundException('Pin not found');
+    }
+
+    return pin;
+  }
+
   async blackList(pinId: string, userId: string) {
     const pin = await this.pinRepository.findOne(pinId);
 
