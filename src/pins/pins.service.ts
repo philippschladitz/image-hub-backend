@@ -35,6 +35,33 @@ export class PinsService {
     return this.pinRepository.save(pinEntity);
   }
 
+  async createComment(pinId: string, userId: string, comment: string) {
+    if (pinId === null || pinId === undefined) {
+      throw new BadRequestException('PinId not provided');
+    }
+
+    if (userId === null || userId === undefined) {
+      throw new BadRequestException('UserId not provided');
+    }
+
+    if (comment === null || comment === undefined) {
+      throw new BadRequestException('Comment not provided');
+    }
+
+    const pin = await this.pinRepository.findOne(pinId);
+
+    if (!pin.comments) {
+      pin.comments = [];
+    }
+
+    pin.comments.push({
+      comment,
+      createdAt: new Date(),
+      userId: new ObjectID(userId),
+    });
+    return this.pinRepository.save(pin);
+  }
+
   async getDashboardPins(userId: string) {
     const userTopics = await this.userFactsService.getTopics(userId);
 
