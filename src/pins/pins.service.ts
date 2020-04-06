@@ -36,17 +36,9 @@ export class PinsService {
   }
 
   async createComment(pinId: string, userId: string, comment: string) {
-    if (pinId === null || pinId === undefined) {
-      throw new BadRequestException('PinId not provided');
-    }
-
-    if (userId === null || userId === undefined) {
-      throw new BadRequestException('UserId not provided');
-    }
-
-    if (comment === null || comment === undefined) {
-      throw new BadRequestException('Comment not provided');
-    }
+    this.validate('pinId', pinId);
+    this.validate('userId', userId);
+    this.validate('comment', comment);
 
     const pin = await this.pinRepository.findOne(pinId);
 
@@ -59,6 +51,32 @@ export class PinsService {
       createdAt: new Date(),
       userId: new ObjectID(userId),
     });
+    return this.pinRepository.save(pin);
+  }
+
+  async createPhoto(
+    pinId: string,
+    userId: string,
+    comment: string,
+    base64: string,
+  ) {
+    this.validate('pinId', pinId);
+    this.validate('userId', userId);
+    this.validate('comment', comment);
+    this.validate('base64', base64);
+
+    const pin = await this.pinRepository.findOne(pinId);
+
+    if (!pin.photos) {
+      pin.photos = [];
+    }
+
+    pin.photos.push({
+      base64,
+      comment,
+      userId: new ObjectID(userId),
+    });
+
     return this.pinRepository.save(pin);
   }
 
@@ -132,5 +150,11 @@ export class PinsService {
     );
 
     return this.pinRepository.save(pin);
+  }
+
+  private validate(key: string, value: string) {
+    if (value === null || value === undefined) {
+      throw new BadRequestException(`${key} not provided`);
+    }
   }
 }

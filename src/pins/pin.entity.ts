@@ -29,5 +29,12 @@ export class Pin {
   }>;
 
   @Column()
+  photos: Array<{
+    base64: string;
+    comment: string;
+    userId: ObjectID;
+  }>;
+
+  @Column()
   userBlackList: ObjectID[];
 }

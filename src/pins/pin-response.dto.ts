@@ -14,5 +14,11 @@ export interface PinResponseDto {
     userId: ObjectID;
     userName: string;
   }>;
+  photos: Array<{
+    base64: string;
+    comment: string;
+    userId: ObjectID;
+    userName: string;
+  }>;
   userBlackList: ObjectID[];
 }
