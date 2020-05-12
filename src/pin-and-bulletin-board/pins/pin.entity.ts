@@ -1,24 +1,40 @@
-import { Topics } from '../shared';
-import { ObjectID } from 'typeorm';
+import { Entity, Column, ObjectIdColumn, ObjectID } from 'typeorm';
+import { Topics } from '../../shared';
 
-export interface PinResponseDto {
+@Entity()
+export class Pin {
+  @ObjectIdColumn()
   id: ObjectID;
+
+  @Column()
   title: string;
+
+  @Column()
   topic: Topics;
+
+  @Column()
   description: string;
+
+  @Column()
   link: string;
+
+  @Column()
   image: string;
+
+  @Column()
   comments: Array<{
     comment: string;
     createdAt: Date;
     userId: ObjectID;
-    userName: string;
   }>;
+
+  @Column()
   photos: Array<{
     base64: string;
     comment: string;
     userId: ObjectID;
-    userName: string;
   }>;
+
+  @Column()
   userBlackList: ObjectID[];
 }

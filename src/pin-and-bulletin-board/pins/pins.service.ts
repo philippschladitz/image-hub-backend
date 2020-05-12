@@ -7,8 +7,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { ObjectID } from 'mongodb';
 import { Pin } from './pin.entity';
-import { Topics } from '../shared';
-import { UserFactsService } from '../user-facts';
+import { Topics } from '../../shared';
+import { UserFactsService } from '../../user-facts';
 
 @Injectable()
 export class PinsService {

@@ -16,10 +16,12 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 import { ObjectID } from 'typeorm';
 
-import { UserService } from '../auth/user.service';
+import { UserService } from '../../auth/user.service';
 import { PinsService } from './pins.service';
 import { PinResponseDto } from './pin-response.dto';
 import { Pin } from './pin.entity';
+
+import { transformPinToResponse } from '../utils';
 
 @Controller('pins')
 export class PinsController {
@@ -32,7 +34,7 @@ export class PinsController {
   @UseGuards(AuthGuard())
   getPins(@Request() req) {
     const user = req.user;
-    this.validateUser(user);
+    this.userService.validate(user);
     return this.pinsService.getDashboardPins(user.id);
   }
 
@@ -40,18 +42,19 @@ export class PinsController {
   @UseGuards(AuthGuard())
   async getPin(@Request() req, @Param() param) {
     const user = req.user;
-    this.validateUser(user);
+    this.userService.validate(user);
+
     const pinId = param.pinId;
 
     const pin = await this.pinsService.getPin(pinId);
-    return this.transform(pin);
+    return transformPinToResponse(pin, this.userService);
   }
 
   @Post('blacklist')
   @UseGuards(AuthGuard())
   blacklist(@Request() req) {
     const user = req.user;
-    this.validateUser(user);
+    this.userService.validate(user);
 
     const { pinId } = req.body;
 
@@ -62,7 +65,7 @@ export class PinsController {
   @UseGuards(AuthGuard())
   removeUserFromBlacklist(@Request() req, @Param() param) {
     const user = req.user;
-    this.validateUser(user);
+    this.userService.validate(user);
 
     const pinId = param.pinId;
 
@@ -73,13 +76,13 @@ export class PinsController {
   @UseGuards(AuthGuard())
   async comment(@Request() req, @Param() param) {
     const user = req.user;
-    this.validateUser(user);
+    this.userService.validate(user);
 
     const pinId = param.pinId;
     const comment = req.body.comment;
 
     const pin = await this.pinsService.createComment(pinId, user.id, comment);
-    return this.transform(pin);
+    return transformPinToResponse(pin, this.userService);
   }
 
   @Post('photo/:pinId')
@@ -92,7 +95,7 @@ export class PinsController {
     @Param() param,
   ) {
     const user = req.user;
-    this.validateUser(user);
+    this.userService.validate(user);
 
     const pinId = param.pinId;
     const comment = body.comment;
@@ -104,69 +107,6 @@ export class PinsController {
       comment,
       base64,
     );
-    return this.transform(pin);
-  }
-
-  private validateUser(user) {
-    if (user === undefined || user === null || !user.id) {
-      throw new BadRequestException('User or user id is undefined');
-    }
-  }
-
-  private async transform(pin: Pin) {
-    const comments = await this.mapUserWithName<
-      {
-        comment: string;
-        createdAt: Date;
-        userId: ObjectID;
-      },
-      {
-        comment: string;
-        createdAt: Date;
-        userId: ObjectID;
-        userName: string;
-      }
-    >(pin.comments);
-
-    const photos = await this.mapUserWithName<
-      {
-        base64: string;
-        comment: string;
-        userId: ObjectID;
-      },
-      {
-        base64: string;
-        comment: string;
-        userId: ObjectID;
-        userName: string;
-      }
-    >(pin.photos);
-
-    return {
-      ...pin,
-      comments,
-      photos,
-    } as PinResponseDto;
-  }
-
-  private async mapUserWithName<
-    T extends {
-      userId: ObjectID;
-    },
-    U extends T & {
-      userName: string;
-    }
-  >(array: T[]) {
-    const newArray: U[] = [];
-    if (array && array.length > 0) {
-      for (const arrayElement of array) {
-        const user = await this.userService.findById(arrayElement.userId);
-        newArray.push({
-          ...arrayElement,
-          userName: user.name,
-        } as U);
-      }
-    }
-    return newArray;
+    return transformPinToResponse(pin, this.userService);
   }
 }

@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UserFactsModule } from './user-facts';
-import { PinsModule } from './pins';
+import { PinAndBulletinBoardModule } from './pin-and-bulletin-board';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { PinsModule } from './pins';
     }),
     AuthModule,
     UserFactsModule,
-    PinsModule,
+    PinAndBulletinBoardModule,
   ],
   controllers: [AppController],
 })

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository, ObjectID } from 'typeorm';
@@ -33,5 +33,11 @@ export class UserService {
       { name },
     );
     return name;
+  }
+
+  validate(user) {
+    if (user === undefined || user === null || !user.id) {
+      throw new BadRequestException('User or user id is undefined');
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { INestApplication } from '@nestjs/common';
-import { PinsService } from '../pins';
+import { PinsService } from '../pin-and-bulletin-board';
 import { Topics } from '../shared';
 
 export async function seed(app: INestApplication) {
